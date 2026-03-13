@@ -1,0 +1,25 @@
+
+> bodim-lk@0.1.0 build
+> next build --turbopack
+
+   ▲ Next.js 15.5.12 (Turbopack)
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+
+   Creating an optimized production build ...
+ ✓ Finished writing to disk in 2.5s
+Turbopack build encountered 1 warnings:
+[next]/internal/font/google/inter_5901b7c6.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap.
+
+
+
+> Build error occurred
+[Error: Turbopack build failed with 1 errors:
+[next]/internal/font/google/inter_5901b7c6.module.css
+next/font: error:
+Failed to fetch `Inter` from Google Fonts.
+
+]
