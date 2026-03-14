@@ -20,8 +20,10 @@ const s3Client = new S3Client({
 // 2. Define the exact validation schema for the request
 const presignSchema = z.object({
     filename: z.string().min(1, 'Filename is required'),
-    contentType: z.enum(['image/jpeg', 'image/png', 'image/webp'], {
-        message: 'Only JPEG, PNG, and WEBP images are allowed',
+    // FIX: Added 'image/jpg' — some browsers (especially on Windows) report
+    // JPEG files as 'image/jpg' instead of 'image/jpeg', causing false 400 errors.
+    contentType: z.enum(['image/jpeg', 'image/jpg', 'image/png', 'image/webp'], {
+        error: 'Only JPEG, PNG, and WEBP images are allowed',
     }),
     fileSize: z.number().positive().max(5 * 1024 * 1024, 'File size must be less than 5MB'),
 });
