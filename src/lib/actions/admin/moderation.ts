@@ -5,7 +5,6 @@ import { prisma, TransactionClient } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
-import { env } from '@/env';
 
 // Zod schemas for admin inputs
 const propertyIdSchema = z.string().cuid();
@@ -13,7 +12,7 @@ const reasonSchema = z.string().min(20, 'Reason must be at least 20 characters')
 
 export async function approveProperty(propertyId: string) {
     try {
-        const admin = await requireAdmin();
+        await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
         // Email notification removed
 

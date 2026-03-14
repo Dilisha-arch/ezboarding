@@ -110,7 +110,7 @@ export default function Navbar() {
                                     {user ? (
                                         <div className="flex items-center gap-4">
                                             <Link
-                                                href="/dashboard/properties/new"
+                                                href="/post-property"
                                                 className={`text-sm font-bold px-5 py-2 rounded-full transition-all flex items-center gap-2 shadow-sm hover:scale-105 ${scrolled ? 'bg-primary text-white hover:bg-primary/90' : 'bg-white text-primary'
                                                     }`}
                                             >
@@ -221,7 +221,7 @@ export default function Navbar() {
                                             </div>
                                             <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-gray-700 font-semibold hover:text-primary"><LayoutDashboard className="w-5 h-5" /> Dashboard</Link>
                                             {isAdmin && <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-gray-700 font-semibold hover:text-primary"><ShieldCheck className="w-5 h-5" /> Admin Panel</Link>}
-                                            <Link href="/dashboard/properties/new" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-xl font-bold"><PlusCircle className="w-5 h-5" /> Post Your Place</Link>
+                                            <Link href="/post-property" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-xl font-bold"><PlusCircle className="w-5 h-5" /> Post Your Place</Link>
                                             <button onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center gap-3 px-3 py-2 text-red-600 font-semibold"><LogOut className="w-5 h-5" /> Sign Out</button>
                                         </>
                                     ) : (

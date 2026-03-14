@@ -8,12 +8,6 @@ import SearchResults from './SearchResults';
 import FilterSidebar from './FilterSidebar';
 import SortDropdown from '@/components/search/SortDropdown';
 import SearchBar from '@/components/search/SearchBar';
-import {
-    PropertyType,
-    GenderRestriction,
-    OccupancySetup,
-    BathroomType
-} from '@/types';
 
 interface SearchPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -51,12 +45,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     const getSingleParam = (key: string) => {
         const val = resolvedParams[key];
         return Array.isArray(val) ? val[0] : val;
-    };
-
-    const getArrayParam = (key: string): string[] => {
-        const val = resolvedParams[key];
-        if (!val) return [];
-        return Array.isArray(val) ? val : [val];
     };
 
     // Extract core parameters

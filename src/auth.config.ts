@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from 'next-auth';
-import Google from 'next-auth/providers/google';
 
 /**
  * Edge-safe auth configuration.
@@ -12,13 +11,7 @@ export const authConfig: NextAuthConfig = {
         signIn: '/auth/signin',
         error: '/auth/error',
     },
-    providers: [
-        Google({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            allowDangerousEmailAccountLinking: true, // allow linking with existing email accounts
-        }),
-    ],
+    providers: [],
     callbacks: {
         async jwt({ token, user }) {
             if (user) {

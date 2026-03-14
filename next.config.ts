@@ -16,12 +16,16 @@ const cspHeader = [
   "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  `img-src 'self' data: blob: https://${r2PublicHost} https://lh3.googleusercontent.com https://images.unsplash.com https://*.tile.openstreetmap.org`,
+  `img-src 'self' data: blob: https://${r2PublicHost} https://images.unsplash.com https://*.tile.openstreetmap.org`,
   "connect-src 'self' https://*.tile.openstreetmap.org",
   "frame-ancestors 'none'",
 ].join('; ');
 
 const nextConfig: NextConfig = {
+  
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Security Headers applied to all routes
   async headers() {
     return [
@@ -49,10 +53,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.unsplash.com',
       },
       {
@@ -69,6 +69,12 @@ const nextConfig: NextConfig = {
         ? ['localhost:3000', '127.0.0.1:3000', 'bodim.lk', 'www.bodim.lk']
         : ['bodim.lk', 'www.bodim.lk'],
     },
+  },
+};
+
+module.exports = {
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

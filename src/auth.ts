@@ -8,7 +8,6 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcrypt';
 import { prisma } from '@/lib/prisma';
 import { loginSchema } from '@/lib/schemas/authSchema';
-import { Role } from '@prisma/client';
 import { authConfig } from '@/auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
