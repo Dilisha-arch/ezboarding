@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { Home, Search, PlusCircle, Menu, X, ChevronDown, LayoutDashboard, LogOut, ShieldCheck, User } from 'lucide-react';
@@ -67,10 +68,12 @@ export default function Navbar() {
 
                     {/* LOGO */}
                     <Link href="/" className="flex items-center gap-2 group" onClick={() => setIsMobileMenuOpen(false)}>
-                        <img src="/logo.png" alt="Logo" className="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105" />
-                        <img
+                        <Image src="/logo.png" alt="Logo" width={48} height={48} className="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+                        <Image
                             src="/brand.png"
                             alt="ezboarding"
+                            width={112}
+                            height={28}
                             className={`h-6 md:h-7 w-auto object-contain transition-all duration-300 ${scrolled ? 'brightness-100' : 'brightness-0 invert'}`}
                         />
                     </Link>
@@ -123,7 +126,7 @@ export default function Navbar() {
                                                         }`}
                                                 >
                                                     {user.image ? (
-                                                        <img src={user.image} alt={user.name ?? 'Profile'} className="w-8 h-8 rounded-full object-cover border-2 border-white" />
+                                                        <Image src={user.image} alt={user.name ?? 'Profile'} width={32} height={32} className="w-8 h-8 rounded-full object-cover border-2 border-white" />
                                                     ) : (
                                                         <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-white">
                                                             <User className="w-4 h-4 text-primary" />
@@ -210,7 +213,7 @@ export default function Navbar() {
                                     {user ? (
                                         <>
                                             <div className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg">
-                                                {user.image ? <img src={user.image} alt={user.name ?? ''} className="w-10 h-10 rounded-full" /> : <span className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><User className="w-5 h-5 text-primary" /></span>}
+                                                {user.image ? <Image src={user.image} alt={user.name ?? ''} width={40} height={40} className="w-10 h-10 rounded-full" /> : <span className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><User className="w-5 h-5 text-primary" /></span>}
                                                 <div>
                                                     <p className="text-sm font-bold text-gray-900">{user.name}</p>
                                                     <p className="text-xs text-gray-500">{user.email}</p>

@@ -85,30 +85,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         }
     }
 
-    // 🌟 UPDATED: Construct the full initialFilters object matching the new SearchFilters type
-    const initialFilters = {
-        query,
-        uni: uniId,
-        facultyId,
-        sortBy: sortBy as 'recommended' | 'price_asc' | 'price_desc',
-        type: getArrayParam('type') as PropertyType[],
-        minPrice: getSingleParam('minPrice') ? Number(getSingleParam('minPrice')) : undefined,
-        maxPrice: getSingleParam('maxPrice') ? Number(getSingleParam('maxPrice')) : undefined,
-        maxDistanceKm: getSingleParam('maxDistanceKm') ? Number(getSingleParam('maxDistanceKm')) : undefined,
-        gender: getSingleParam('gender') as GenderRestriction | undefined,
-        occupancy: getSingleParam('occupancy') as OccupancySetup | undefined,
-        maxRoommates: getSingleParam('maxRoommates') ? Number(getSingleParam('maxRoommates')) : undefined,
-        bathroom: getArrayParam('bathroom') as BathroomType[],
-        meals: getSingleParam('meals') === 'true',
-        acRoom: getSingleParam('acRoom') === 'true',
-    };
-
     return (
         <div className="min-h-screen bg-gray-50 pt-20 md:pt-24">
             {/* Top search bar - Sticky */}
             <div className="bg-white border-b border-gray-100 sticky top-16 md:top-20 z-30 shadow-sm/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <SearchBar defaultValue={initialFilters.query} />
+                    <SearchBar defaultValue={query} />
                 </div>
             </div>
 
@@ -117,9 +99,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
                     {/* LEFT COLUMN: Filter Sidebar */}
                     <div className="lg:w-72 flex-shrink-0">
-                        {/* 🌟 UPDATED: Pass the comprehensive initialFilters object */}
                         <FilterSidebar
-                            initialFilters={initialFilters}
                             universities={UNIVERSITIES}
                         />
                     </div>

@@ -30,12 +30,10 @@ const MAX_PRICE = 100000;
 const PRICE_STEP = 1000;
 
 interface SearchFilterPanelProps {
-    initialFilters: Partial<SearchFilters>;
     universities: University[];
 }
 
 export default function SearchFilterPanel({
-    initialFilters,
     universities,
 }: SearchFilterPanelProps) {
     const router = useRouter();
@@ -119,7 +117,6 @@ export default function SearchFilterPanel({
 
     const occupancySetup = form.watch('occupancy');
     const formUni = form.watch('uni');
-    const formFac = form.watch('facultyId');
 
     // Get faculties for the currently selected university in the form
     const currentUniData = universities.find(u => u.id === formUni);

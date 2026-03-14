@@ -8,7 +8,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MapPin, GraduationCap } from 'lucide-react';
 import { University } from '@/types';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+
 import { SearchableSelect } from '@/components/ui/searchable-select';
 
 interface HeroSearchProps {

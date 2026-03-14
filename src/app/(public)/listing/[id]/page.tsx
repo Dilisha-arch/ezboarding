@@ -3,6 +3,7 @@
  */
 
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import { after } from 'next/server';
 import {
@@ -340,10 +341,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
                                 {/* Landlord info */}
                                 <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-3">
                                     {listing.landlord.image ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
+                                        <Image
                                             src={listing.landlord.image}
                                             alt={listing.landlord.name ?? 'Landlord'}
+                                            width={36}
+                                            height={36}
                                             className="w-9 h-9 rounded-full object-cover"
                                         />
                                     ) : (

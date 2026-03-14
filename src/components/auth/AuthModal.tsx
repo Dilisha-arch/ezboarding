@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { X, Loader2, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -154,8 +155,8 @@ export default function AuthModal({
                         <X className="w-5 h-5" />
                     </button>
 
-                    <img src="/logo.png" alt="Logo Icon" className="h-16 w-auto object-contain mb-2 drop-shadow-sm" />
-                    <img src="/brand.png" alt="ezboarding" className="h-6 w-auto object-contain mb-4" />
+                    <Image src="/logo.png" alt="Logo Icon" width={64} height={64} className="h-16 w-auto object-contain mb-2 drop-shadow-sm" />
+                    <Image src="/brand.png" alt="ezboarding" width={112} height={24} className="h-6 w-auto object-contain mb-4" />
 
                     <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
                         {isLogin ? 'Welcome back' : 'Create an account'}

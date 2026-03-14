@@ -5,7 +5,6 @@ import { prisma, TransactionClient } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
-import { sendEmail } from '@/lib/email';
 import { env } from '@/env';
 
 // Zod schemas for admin inputs
@@ -16,40 +15,7 @@ export async function approveProperty(propertyId: string) {
     try {
         const admin = await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
-        const emailPayload = await prisma.$transaction(async (tx: TransactionClient) => {
-            // a) Idempotent update: Only update if still PENDING
-            const property = await tx.property.update({
-                where: { id, status: 'PENDING' },
-                data: {
-                    status: 'APPROVED',
-                    reviewedBy: admin.id,
-                    reviewedAt: new Date(),
-                },
-                include: { landlord: true },
-            });
-
-            // b) Audit log
-            await tx.adminAction.create({
-                data: { propertyId: id, adminId: admin.id, action: 'APPROVED' },
-            });
-
-            if (property.landlord.email) {
-                return {
-                    to: property.landlord.email,
-                    propertyTitle: property.title,
-                    propertyId: property.id,
-                };
-            }
-            return null;
-        });
-
-        if (emailPayload) {
-            sendEmail.listingApproved({
-                to: emailPayload.to,
-                propertyTitle: emailPayload.propertyTitle,
-                listingUrl: `${env.NEXT_PUBLIC_APP_URL}/listing/${emailPayload.propertyId}`,
-            }).catch((err) => console.error('[EMAIL_APPROVED_ERROR]', err));
-        }
+        // Email notification removed
 
         revalidatePath('/admin');
         revalidatePath(`/listing/${id}`);
@@ -66,8 +32,8 @@ export async function rejectProperty(propertyId: string, reason: string) {
         const admin = await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
         const validReason = reasonSchema.parse(reason);
-        const emailPayload = await prisma.$transaction(async (tx: TransactionClient) => {
-            const property = await tx.property.update({
+        await prisma.$transaction(async (tx: TransactionClient) => {
+            await tx.property.update({
                 where: { id, status: 'PENDING' },
                 data: {
                     status: 'REJECTED',
@@ -75,22 +41,14 @@ export async function rejectProperty(propertyId: string, reason: string) {
                     reviewedBy: admin.id,
                     reviewedAt: new Date(),
                 },
-                include: { landlord: true },
             });
 
             await tx.adminAction.create({
                 data: { propertyId: id, adminId: admin.id, action: 'REJECTED', note: validReason },
             });
-
-            if (property.landlord.email) {
-                return { to: property.landlord.email, propertyTitle: property.title, reason: validReason };
-            }
-            return null;
         });
 
-        if (emailPayload) {
-            sendEmail.listingRejected(emailPayload).catch((err) => console.error('[EMAIL_REJECTED_ERROR]', err));
-        }
+        // Email notification removed
 
         revalidatePath('/admin');
 
@@ -106,31 +64,23 @@ export async function suspendProperty(propertyId: string, reason: string) {
         const admin = await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
         const validReason = reasonSchema.parse(reason);
-        const emailPayload = await prisma.$transaction(async (tx: TransactionClient) => {
+        await prisma.$transaction(async (tx: TransactionClient) => {
             // Suspensions can happen to any non-deleted property
-            const property = await tx.property.update({
+            await tx.property.update({
                 where: { id },
                 data: {
                     status: 'SUSPENDED',
                     reviewedBy: admin.id,
                     reviewedAt: new Date(),
                 },
-                include: { landlord: true },
             });
 
             await tx.adminAction.create({
                 data: { propertyId: id, adminId: admin.id, action: 'SUSPENDED', note: validReason },
             });
-
-            if (property.landlord.email) {
-                return { to: property.landlord.email, propertyTitle: property.title, reason: validReason };
-            }
-            return null;
         });
 
-        if (emailPayload) {
-            sendEmail.listingSuspended(emailPayload).catch((err) => console.error('[EMAIL_SUSPENDED_ERROR]', err));
-        }
+        // Email notification removed
 
         revalidatePath('/admin');
         revalidatePath(`/listing/${id}`);
@@ -146,16 +96,15 @@ export async function reactivateProperty(propertyId: string) {
     try {
         const admin = await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
-        const emailPayload = await prisma.$transaction(async (tx: TransactionClient) => {
+        await prisma.$transaction(async (tx: TransactionClient) => {
             // Only reactivate if currently SUSPENDED
-            const property = await tx.property.update({
+            await tx.property.update({
                 where: { id, status: 'SUSPENDED' },
                 data: {
                     status: 'APPROVED',
                     reviewedBy: admin.id,
                     reviewedAt: new Date(),
                 },
-                include: { landlord: true },
             });
 
             await tx.adminAction.create({
@@ -166,24 +115,9 @@ export async function reactivateProperty(propertyId: string) {
                     note: 'Listing re-activated from suspended state.',
                 },
             });
-
-            if (property.landlord.email) {
-                return {
-                    to: property.landlord.email,
-                    propertyTitle: property.title,
-                    propertyId: property.id,
-                };
-            }
-            return null;
         });
 
-        if (emailPayload) {
-            sendEmail.listingApproved({
-                to: emailPayload.to,
-                propertyTitle: emailPayload.propertyTitle,
-                listingUrl: `${env.NEXT_PUBLIC_APP_URL}/listing/${emailPayload.propertyId}`,
-            }).catch((err) => console.error('[EMAIL_REACTIVATE_ERROR]', err));
-        }
+        // Email notification removed
 
         revalidatePath('/admin');
         revalidatePath(`/listing/${id}`);

@@ -5,8 +5,7 @@ import bcrypt from 'bcrypt';
 import { prisma } from '@/lib/prisma';
 import { ratelimit, applyRateLimit, RateLimitError } from '@/lib/ratelimit';
 import { registerSchema } from '@/lib/schemas/authSchema';
-// Note: Email implementation will be completed in Section 8
-import { sendEmail } from '@/lib/email';
+// Note: Email implementation removed as per user request
 
 type RegisterResult =
     | { success: true }
@@ -53,8 +52,7 @@ export async function registerLandlord(formData: unknown): Promise<RegisterResul
             },
         });
 
-        // 6. Send welcome email (Fire and forget, to be implemented in Section 8)
-        sendEmail.welcome({ to: email, name });
+        // 6. Welcome email removed
 
         return { success: true };
     } catch (error) {

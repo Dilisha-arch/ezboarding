@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
 
 export default function Footer() {
@@ -15,8 +16,8 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div className="space-y-6">
                         <Link href="/" className="flex items-center gap-3 group">
-                            <img src="/logo.png" alt="Logo Icon" className="h-16 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-110" />
-                            <img src="/brand.png" alt="ezboarding" className="h-6 w-auto object-contain brightness-0 invert" />
+                            <Image src="/logo.png" alt="Logo Icon" width={64} height={64} className="h-16 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-110" />
+                            <Image src="/brand.png" alt="ezboarding" width={112} height={24} className="h-6 w-auto object-contain brightness-0 invert" />
                         </Link>
                         <p className="text-base text-gray-400 leading-relaxed max-w-xs font-medium">
                             Sri Lanka&apos;s premier platform connecting university students with safe, affordable, and verified boarding places.

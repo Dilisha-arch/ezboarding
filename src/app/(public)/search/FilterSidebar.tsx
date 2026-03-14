@@ -3,7 +3,7 @@
 import { SlidersHorizontal } from 'lucide-react';
 // Import the new panel you just created!
 import SearchFilterPanel from '@/components/search/SearchFilterPanel';
-import { type SearchFilters } from '@/lib/data/properties';
+import { type SearchFilters } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet';
 import { University } from '@/types';
@@ -13,11 +13,10 @@ interface FilterSidebarProps {
     universities: University[];
 }
 
-export default function FilterSidebar({ initialFilters, universities }: FilterSidebarProps) {
+export default function FilterSidebar({ universities }: Omit<FilterSidebarProps, 'initialFilters'>) {
     // Define the panel once so we don't duplicate code for Mobile vs Desktop
     const renderFilterPanel = (
         <SearchFilterPanel
-            initialFilters={initialFilters}
             universities={universities}
         />
     );

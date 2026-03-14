@@ -30,7 +30,8 @@ const SLIDES = [
 ];
 
 const INTERVAL_MS = 5000;   // 5 s per slide
-const FADE_DURATION = 1200; // must match CSS transition-duration below
+
+
 
 interface HeroSlideshowProps {
     /** Override slide sources — useful for future CMS integration */

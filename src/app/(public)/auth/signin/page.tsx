@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, Suspense } from 'react';
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -157,8 +158,8 @@ function SignInForm() {
             {/* Brand Header */}
             <div className="text-center mb-8 flex flex-col items-center">
                 <Link href="/" className="transition-transform hover:scale-105 active:scale-95">
-                    <img src="/logo.png" alt="Logo" className="h-24 w-auto object-contain mb-2 drop-shadow-md" />
-                    <img src="/brand.png" alt="ezboarding" className="h-8 w-auto object-contain" />
+                    <Image src="/logo.png" alt="Logo" width={96} height={96} className="h-24 w-auto object-contain mb-2 drop-shadow-md" />
+                    <Image src="/brand.png" alt="ezboarding" width={128} height={32} className="h-8 w-auto object-contain" />
                 </Link>
                 <p className="text-gray-500 text-sm mt-4 font-medium">Student housing made simple</p>
             </div>

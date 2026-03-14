@@ -5,7 +5,7 @@ import { prisma, TransactionClient } from '@/lib/prisma';
 import { ratelimit, applyRateLimit, RateLimitError } from '@/lib/ratelimit';
 import { serverListingSchema } from '@/lib/schemas/serverListingSchema';
 import { revalidatePath } from 'next/cache';
-import { sendEmail } from '@/lib/email'; // To be implemented in Section 8
+
 
 type ActionResult =
     | { success: true; data?: unknown }
@@ -111,7 +111,7 @@ export async function updateProperty(propertyId: string, formData: unknown): Pro
             });
         });
 
-        sendEmail.listingResubmitted({ to: session.user.email!, propertyTitle: data.title });
+        // Email notification removed
 
         revalidatePath('/dashboard');
         revalidatePath(`/listing/${propertyId}`);

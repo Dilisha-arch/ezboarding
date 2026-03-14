@@ -5,7 +5,6 @@ import { prisma, TransactionClient } from '@/lib/prisma';
 import { ratelimit, applyRateLimit, RateLimitError } from '@/lib/ratelimit';
 import { serverListingSchema } from '@/lib/schemas/serverListingSchema';
 import { revalidatePath } from 'next/cache';
-import { sendEmail } from '@/lib/email';
 
 type CreatePropertyResult =
     | { success: true; propertyId: string }
@@ -118,8 +117,7 @@ export async function createProperty(formData: unknown): Promise<CreatePropertyR
 
         // 5. Post-Transaction Actions [cite: 41, 71]
 
-        // Fire-and-forget email (to be implemented)
-        sendEmail.listingSubmitted({ to: session.user.email!, propertyTitle: property.title });
+        // Fire-and-forget email removed
 
         // Revalidate the dashboard cache so the new listing shows up immediately
         revalidatePath('/dashboard');

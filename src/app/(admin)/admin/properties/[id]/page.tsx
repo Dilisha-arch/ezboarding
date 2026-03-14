@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 import ModerationActions from '@/components/admin/ModerationActions';
@@ -72,11 +73,12 @@ export default async function AdminPropertyPage({ params }: AdminPropertyPagePro
                 <div className="lg:col-span-2 space-y-4">
                     {/* Cover image */}
                     {coverImage && (
-                        <div className="rounded-xl overflow-hidden aspect-video bg-gray-100 border border-gray-200">
-                            <img
+                        <div className="rounded-xl overflow-hidden aspect-video bg-gray-100 border border-gray-200 relative">
+                            <Image
                                 src={coverImage}
                                 alt={property.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                             />
                         </div>
                     )}
@@ -149,9 +151,11 @@ export default async function AdminPropertyPage({ params }: AdminPropertyPagePro
                         </h2>
                         <div className="flex items-center gap-3">
                             {property.landlord.image ? (
-                                <img
+                                <Image
                                     src={property.landlord.image}
                                     alt={property.landlord.name ?? ''}
+                                    width={40}
+                                    height={40}
                                     className="w-10 h-10 rounded-full object-cover"
                                 />
                             ) : (
