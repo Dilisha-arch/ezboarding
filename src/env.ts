@@ -9,6 +9,8 @@ const serverSchema = z.object({
     DATABASE_URL: z.url(),
 
     AUTH_SECRET: z.string().min(32),
+    AUTH_GOOGLE_ID: z.string().min(1),
+    AUTH_GOOGLE_SECRET: z.string().min(1),
 
     R2_ENDPOINT: z.url(),
     R2_BUCKET: z.string().min(1),
@@ -29,6 +31,8 @@ const mergedSchema = serverSchema.merge(clientSchema);
 const parsed = mergedSchema.safeParse({
     DATABASE_URL: process.env.DATABASE_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     R2_ENDPOINT: process.env.R2_ENDPOINT,
     R2_BUCKET: process.env.R2_BUCKET,
     R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,

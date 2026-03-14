@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { registerLandlord } from '@/lib/actions/auth';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 
 type FieldErrors = Record<string, string[]>;
 
@@ -31,6 +32,18 @@ function SignInForm() {
 
     // Field-level errors from server validation
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+    // Handle OAuth Errors
+    React.useEffect(() => {
+        const error = searchParams.get('error');
+        if (error) {
+            if (error === 'OAuthAccountNotLinked') {
+                toast.error('This email is already linked to another account. Please sign in with your password.');
+            } else {
+                toast.error('An error occurred during sign in. Please try again.');
+            }
+        }
+    }, [searchParams]);
 
     const isSignIn = mode === 'signin';
 
@@ -161,7 +174,22 @@ function SignInForm() {
                     {isSignIn ? 'Sign in to manage your property listings.' : 'Join ezboarding to reach thousands of students.'}
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-4">
+                    <GoogleSignInButton
+                        disabled={isLoading}
+                        callbackUrl={callbackUrl}
+                    />
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t border-gray-100" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-gray-400 font-medium">Or continue with email</span>
+                        </div>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
                     {!isSignIn && (
                         <div className="space-y-1">
                             <Label htmlFor="name" className="sr-only">Full Name</Label>
@@ -261,6 +289,7 @@ function SignInForm() {
                         )}
                     </Button>
                 </form>
+            </div>
 
 
 

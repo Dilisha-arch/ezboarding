@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { registerLandlord } from '@/lib/actions/auth';
+import { CheckCircle2, Circle } from 'lucide-react';
+import { GoogleSignInButton } from './GoogleSignInButton';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -161,7 +163,21 @@ export default function AuthModal({
                 </div>
 
                 <div className="p-6 space-y-6">
-                    <form onSubmit={handleCredentialsSubmit} className="space-y-4">
+                    <div className="space-y-4">
+                        <GoogleSignInButton
+                            disabled={isLoading}
+                        />
+
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-gray-100" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-white px-2 text-gray-400 font-medium">Or continue with email</span>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleCredentialsSubmit} className="space-y-4">
 
                         {/* Full Name Input (Register Only) */}
                         {!isLogin && (
@@ -228,6 +244,32 @@ export default function AuthModal({
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
+
+                            {/* Password Requirements Checklist (Register Only) */}
+                            {!isLogin && password.length > 0 && (
+                                <div className="mt-2 p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                                    <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">Password Requirements</p>
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                                        {[
+                                            { label: '8+ Characters', met: password.length >= 8 },
+                                            { label: 'Uppercase', met: /[A-Z]/.test(password) },
+                                            { label: 'Number', met: /[0-9]/.test(password) },
+                                            { label: 'Special Char', met: /[^A-Za-z0-9]/.test(password) },
+                                        ].map((req) => (
+                                            <div key={req.label} className="flex items-center gap-1.5">
+                                                {req.met ? (
+                                                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                                                ) : (
+                                                    <Circle className="w-3.5 h-3.5 text-gray-300" />
+                                                )}
+                                                <span className={`text-[11px] font-medium transition-colors ${req.met ? 'text-green-700' : 'text-gray-500'}`}>
+                                                    {req.label}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Confirm Password Input (Register Only) */}
@@ -265,6 +307,7 @@ export default function AuthModal({
                             )}
                         </Button>
                     </form>
+                </div>
 
                 </div>
 
