@@ -5,16 +5,30 @@ import { prisma, TransactionClient } from '@/lib/prisma';
 import { ratelimit, applyRateLimit, RateLimitError } from '@/lib/ratelimit';
 import { serverListingSchema } from '@/lib/schemas/serverListingSchema';
 import { revalidatePath } from 'next/cache';
+import { S3Client, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { env } from '@/env';
 
 type CreatePropertyResult =
     | { success: true; propertyId: string }
     | { success: false; error: string; fieldErrors?: Record<string, string[]> };
 
+// Initialize S3 Client for verification
+const s3Client = new S3Client({
+    region: 'auto',
+    endpoint: env.R2_ENDPOINT,
+    forcePathStyle: true,
+    credentials: {
+        accessKeyId: env.R2_ACCESS_KEY_ID,
+        secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    },
+});
+
 export async function createProperty(formData: unknown): Promise<CreatePropertyResult> {
     try {
         // 1. Authentication Check [cite: 41]
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') {
+        // FIX: Allow both LANDLORD and ADMIN roles to create properties
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) {
             return { success: false, error: 'Unauthorised' };
         }
 
@@ -32,6 +46,28 @@ export async function createProperty(formData: unknown): Promise<CreatePropertyR
         }
 
         const data = parsed.data;
+
+        // 3.5. R2 Verification: Ensure all photos actually exist in storage before saving
+        if (data.photos.length > 0) {
+            try {
+                await Promise.all(
+                    data.photos.map(async (url) => {
+                        const key = url.replace(`${env.NEXT_PUBLIC_R2_PUBLIC_URL}/`, '');
+                        const headCommand = new HeadObjectCommand({
+                            Bucket: env.R2_BUCKET,
+                            Key: key,
+                        });
+                        await s3Client.send(headCommand);
+                    })
+                );
+            } catch (error) {
+                console.error('[R2_VERIFY_FAILED] One or more images not found in storage:', error);
+                return { 
+                    success: false, 
+                    error: 'One or more images failed to upload correctly. Please try again.' 
+                };
+            }
+        }
 
         // 4. Atomic Database Transaction [cite: 41]
         const property = await prisma.$transaction(async (tx: TransactionClient) => {

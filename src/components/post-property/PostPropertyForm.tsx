@@ -161,7 +161,11 @@ export default function PostPropertyForm({ universities, amenities }: PostProper
 
             form.setValue('photos', newPhotoUrls, { shouldValidate: true });
         } catch (error) {
-            console.error('Upload error:', error);
+            console.error('Upload Error Details:', error);
+            if (error instanceof Error) {
+                console.error('Error Message:', error.message);
+                console.error('Error Stack:', error.stack);
+            }
             toast.error('Image upload failed. Please try again.');
         } finally {
             setIsUploading(false);

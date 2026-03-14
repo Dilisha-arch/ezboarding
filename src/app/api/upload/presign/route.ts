@@ -11,6 +11,7 @@ import crypto from 'crypto';
 const s3Client = new S3Client({
     region: 'auto',
     endpoint: env.R2_ENDPOINT,
+    forcePathStyle: true, // FIX: Enforce path-style URLs to make CSP white-listing more predictable
     credentials: {
         accessKeyId: env.R2_ACCESS_KEY_ID,
         secretAccessKey: env.R2_SECRET_ACCESS_KEY,
@@ -32,7 +33,8 @@ export async function POST(req: Request) {
     try {
         // 3. Authentication & Role Check
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') {
+        // FIX: Allow both LANDLORD and ADMIN roles to upload images
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

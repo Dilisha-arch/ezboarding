@@ -18,7 +18,7 @@ type ActionResult =
 export async function updateProperty(propertyId: string, formData: unknown): Promise<ActionResult> {
     try {
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') return { success: false, error: 'Forbidden' };
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) return { success: false, error: 'Forbidden' };
 
         await applyRateLimit(ratelimit.listing, session.user.id);
 
@@ -131,7 +131,7 @@ export async function updateProperty(propertyId: string, formData: unknown): Pro
 export async function archiveProperty(propertyId: string): Promise<ActionResult> {
     try {
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') return { success: false, error: 'Forbidden' };
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) return { success: false, error: 'Forbidden' };
 
         await applyRateLimit(ratelimit.listing, session.user.id);
 
@@ -162,7 +162,7 @@ export async function archiveProperty(propertyId: string): Promise<ActionResult>
 export async function updateAvailability(propertyId: string, availableSpots: number): Promise<ActionResult> {
     try {
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') return { success: false, error: 'Forbidden' };
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) return { success: false, error: 'Forbidden' };
         await applyRateLimit(ratelimit.listing, session.user.id);
 
         // Verify ownership and get total spots to validate against
@@ -214,7 +214,7 @@ export async function quickUpdateProperty(
 ): Promise<ActionResult> {
     try {
         const session = await auth();
-        if (!session?.user?.id || session.user.role !== 'LANDLORD') return { success: false, error: 'Forbidden' };
+        if (!session?.user?.id || (session.user.role !== 'LANDLORD' && session.user.role !== 'ADMIN')) return { success: false, error: 'Forbidden' };
 
         await applyRateLimit(ratelimit.listing, session.user.id);
 

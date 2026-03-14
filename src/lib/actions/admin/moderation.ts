@@ -12,9 +12,28 @@ const reasonSchema = z.string().min(20, 'Reason must be at least 20 characters')
 
 export async function approveProperty(propertyId: string) {
     try {
-        await requireAdmin();
+        const admin = await requireAdmin();
         const id = propertyIdSchema.parse(propertyId);
-        // Email notification removed
+
+        await prisma.$transaction(async (tx: TransactionClient) => {
+            await tx.property.update({
+                where: { id, status: 'PENDING' },
+                data: {
+                    status: 'APPROVED',
+                    reviewedBy: admin.id,
+                    reviewedAt: new Date(),
+                },
+            });
+
+            await tx.adminAction.create({
+                data: { 
+                    propertyId: id, 
+                    adminId: admin.id, 
+                    action: 'APPROVED', 
+                    note: 'Listing approved.' 
+                },
+            });
+        });
 
         revalidatePath('/admin');
         revalidatePath(`/listing/${id}`);

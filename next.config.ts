@@ -27,9 +27,9 @@ const cspHeader = [
   "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  `img-src 'self' data: blob: https://${r2PublicHost} https://images.unsplash.com https://*.tile.openstreetmap.org`,
-  // FIX: Added R2 public host and R2 endpoint host to allow direct browser uploads
-  `connect-src 'self' https://*.tile.openstreetmap.org https://${r2PublicHost} https://${r2EndpointHost}`,
+  `img-src 'self' data: blob: https://${r2PublicHost} https://*.${r2PublicHost} https://images.unsplash.com https://*.tile.openstreetmap.org`,
+  // FIX: Added wildcards (*.) to allow virtual-hosted bucket subdomains in R2
+  `connect-src 'self' https://*.tile.openstreetmap.org https://${r2PublicHost} https://*.${r2PublicHost} https://${r2EndpointHost} https://*.${r2EndpointHost}`,
   "frame-ancestors 'none'",
 ].join('; ');
 
